@@ -1,6 +1,7 @@
 // import 'dart:collection';
 
 import 'package:flutter/material.dart';
+import 'package:test_fullter/widget/GetxTodo.dart';
 
 void main() => runApp(const MyApp());
 
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
+      home: const GetTodo(),
       // home: const TodoList(),
       // home: const Counter(title: 'Flutter Demo Home Page'),
     );

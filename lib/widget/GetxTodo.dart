@@ -19,7 +19,7 @@ class ValueListController extends GetxController {
   }
 
   void _change(int index){ // 수정
-    valueList[index] = "$_value";
+    // valueList[index] = "$value";
 
   }
 
@@ -30,6 +30,12 @@ class ValueListController extends GetxController {
   
   void _valueAllClear(){ // 전체삭제
     valueList.clear();
+  }
+
+  void _showDialog(int index){
+    valueList[index] = "$_test";
+    print("$_test");
+    Get.back();
   }
 }
 
@@ -83,7 +89,35 @@ class GetTodo extends StatelessWidget {
                         TextButton(
                           onPressed: (){
                             Get.find<ValueListController>()._change(index);
-                        },child: const Text('수정')),
+                            showDialog(
+                              context: context,
+                              // barrierDismissible: false,
+                              builder: (controller) {
+                                return AlertDialog(
+                                  title: const Text('수정하기'),
+                                  content: TextField(
+                                    autofocus: true,
+                                    maxLength: 12,
+                                    onChanged: (value) {
+                                      Get.find<ValueListController>()._test.value = value;
+                                    },
+                                  ),
+                                  actions: [
+                                    TextButton(onPressed: (){
+                                        Get.find<ValueListController>()._showDialog(index);
+                                        Get.back(closeOverlays: true);
+                                      }, child: const Text('확인')
+                                    ),
+                                    TextButton(onPressed: (){
+                                      Get.back();
+                                      }, child: const Text('취소')
+                                    )
+                                  ],
+                                );
+                              },
+                            );
+                        },
+                        child: const Text('수정')),
                         TextButton(onPressed: (){
                           Get.find<ValueListController>()._onRemove(index);
                         }, child: const Text('삭제')),
