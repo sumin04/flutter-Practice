@@ -10,35 +10,33 @@ class ValueListController extends GetxController {
   final RxString _value = "".obs;
   RxList<String> valueList = <String>[].obs;
 
-  void _addvalue(){ // 추가
-    if(_value.isNotEmpty){
+  void _addvalue() { // 추가
+    if (_value.isNotEmpty) {
       valueList.add(_value.value);
-      print('valueList${valueList}');
+      print('valueList$valueList');
       _value.value = "";
     }
   }
 
-  void _change(int index){ // 수정
+  void _change(int index) { // 수정
     // valueList[index] = "$value";
-
   }
 
-  void _onRemove(int index){ // 삭제
+  void _onRemove(int index) { // 삭제
     valueList.removeAt(index);
     update();
   }
-  
-  void _valueAllClear(){ // 전체삭제
+
+  void _valueAllClear() { // 전체삭제
     valueList.clear();
   }
 
-  void _showDialog(int index){
+  void _showDialog(int index) {
     valueList[index] = "$_test";
     print("$_test");
     Get.back();
   }
 }
-
 
 class GetTodo extends StatelessWidget {
   const GetTodo({super.key});
@@ -46,15 +44,17 @@ class GetTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ValueListController());
+    final TextEditingController textEditingController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(title: const Text('GetX 적용'),),
       body: Container(
-        padding:  const EdgeInsets.fromLTRB(15, 0, 15, 0),
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
         child: Column(children: [
           Row(children: [
-            Flexible(child: 
-              TextField(
+            Flexible(
+              child: TextField(
+                controller: textEditingController,
                 autofocus: true,
                 maxLength: 12,
                 onChanged: (value) {
@@ -62,15 +62,17 @@ class GetTodo extends StatelessWidget {
                 },
               ),
             ),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 4.0),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 4.0),
               child: ElevatedButton(
-                onPressed: (){
+                onPressed: () {
                   Get.find<ValueListController>()._addvalue();
+                  textEditingController.clear();
                   // controller._addvalue();
                 },
-              child: const Text('저장'),),
-          ),
+                child: const Text('저장'),
+              ),
+            ),
           ]),
           Flexible(
             child: Container(
@@ -81,18 +83,18 @@ class GetTodo extends StatelessWidget {
                 builder: (controller) => ListView.builder(
                   shrinkWrap: true,
                   itemCount: controller.valueList.length,
-                  itemBuilder: (context, index){
+                  itemBuilder: (context, index) {
                     return ListTile(
                       // title: Text("${index +1} : "),
-                      title: Text("${index +1} : ${controller.valueList[index]}"),
+                      title: Text("${index + 1} : ${controller.valueList[index]}"),
                       trailing: Wrap(children: [
                         TextButton(
-                          onPressed: (){
+                          onPressed: () {
                             Get.find<ValueListController>()._change(index);
                             showDialog(
                               context: context,
                               // barrierDismissible: false,
-                              builder: (controller) {
+                              builder: (context) {
                                 return AlertDialog(
                                   title: const Text('수정하기'),
                                   content: TextField(
@@ -103,45 +105,51 @@ class GetTodo extends StatelessWidget {
                                     },
                                   ),
                                   actions: [
-                                    TextButton(onPressed: (){
+                                    TextButton(
+                                      onPressed: () {
                                         Get.find<ValueListController>()._showDialog(index);
                                         Get.back(closeOverlays: true);
-                                      }, child: const Text('확인')
+                                      },
+                                      child: const Text('확인'),
                                     ),
-                                    TextButton(onPressed: (){
-                                      Get.back();
-                                      }, child: const Text('취소')
+                                    TextButton(
+                                      onPressed: () {
+                                        Get.back(closeOverlays: true);
+                                      },
+                                      child: const Text('취소'),
                                     )
                                   ],
                                 );
                               },
                             );
-                        },
-                        child: const Text('수정')),
-                        TextButton(onPressed: (){
-                          Get.find<ValueListController>()._onRemove(index);
-                        }, child: const Text('삭제')),
-                      ],),
+                          },
+                          child: const Text('수정'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.find<ValueListController>()._onRemove(index);
+                          },
+                          child: const Text('삭제'),
+                        ),
+                      ]),
                     );
-                  }
-                ),),
-            )
+                  },
+                ),
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
               Get.find<ValueListController>()._valueAllClear();
               controller._valueAllClear();
-            }, 
-            child: const Text('전체 삭제')
+            },
+            child: const Text('전체 삭제'),
           ),
-        ],),
+        ]),
       ),
     );
   }
 }
-
-
-
 
 // class SimpleController extends GetxController {
 //   int index = 0;
@@ -168,4 +176,4 @@ class GetTodo extends StatelessWidget {
 //       )
 //     );
 //   }
-// } 
+// }
